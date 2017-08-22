@@ -1,0 +1,364 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+<h:head>
+
+	<meta http-equiv="Content-Type"
+		content="text/xhtml; charset=iso-8859-1" />
+	<title>Funcionarios 999</title>
+</h:head>
+
+<h:body style="background-color:#B0E0E6;">
+
+	<p:growl id="aviso" />
+
+
+
+
+
+
+<!-- 	<P:TABMENU ACTIVEINDEX="#{PARAM.I}"> -->
+
+<!-- 		<P:MENUITEM VALUE="PROJETOS" OUTCOME="/MANTER/MANTERPROJETOS"> -->
+<!-- 			<F:PARAM NAME="I" VALUE="0" /> -->
+<!-- 		</P:MENUITEM> -->
+
+<!-- 		<P:MENUITEM VALUE="COLABORADORES" OUTCOME="/MANTER/MANTERFUNCIONARIO"> -->
+<!-- 			<F:PARAM NAME="I" VALUE="1" /> -->
+<!-- 		</P:MENUITEM> -->
+<!-- 	</P:TABMENU> -->
+
+
+
+
+
+
+	<h:form id="cabecalho">
+
+		<h:panelGrid columns="1" cellpadding="3">
+
+
+			<p:commandButton id="modalDialogButton" value="Novo Colaborador"
+				action="#{funcionario.novo}" onclick="inserirDialog.show()"
+				update=":formTabelaFunc:datatableFunc,:formInserir:modalDialog"
+				type="button" icon="ui-icon-extlink" />
+
+
+		</h:panelGrid>
+
+	</h:form>
+
+
+
+
+
+	<h:form id="formTabelaFunc">
+
+
+		<p:messages id="messages" autoUpdate="true" closable="true" />
+
+		<p:dataTable id="datatableFunc" var="lista"
+			value="#{funcionario.listaFunc}"
+			emptyMessage="Dados não encontrados" paginator="true" rows="10">
+
+
+			<p:column headerText="Matrícula" style="text-align: center">
+
+				<h:outputText value="#{lista.matricula}"></h:outputText>
+
+			</p:column>
+
+
+			<p:column id="nome" headerText="Nome" style="text-align: center">
+
+				<h:outputText value="#{lista.nome}"></h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Equipe" style="text-align: center">
+
+				<h:outputText value="#{lista.equipe}"></h:outputText>
+
+			</p:column>
+
+
+
+			<p:column headerText="Telefone" style="text-align: center">
+
+				<h:outputText value="#{lista.celular}"></h:outputText>
+
+
+
+			</p:column>
+
+			<p:column headerText="Ação" style="text-align: center">
+
+				<p:commandButton icon="ui-icon-arrowrefresh-1-w"
+					onclick="alterarDialog.show()"
+					update=":formAlterar:panelAlterar,:formAlterar:panelDoisAlterar,:formAlterar:panelTresAlterar">
+					<f:setPropertyActionListener value="#{lista}"
+						target="#{funcionario.funcionarioPOJO}" />
+				</p:commandButton>
+
+
+				<p:commandButton styleClass="ui-priority-primary"
+					icon="ui-icon-close" onclick="confirmation.show()">
+					<f:setPropertyActionListener value="#{lista}"
+						target="#{funcionario.funcionarioPOJO}" />
+				</p:commandButton>
+
+
+
+			</p:column>
+
+		</p:dataTable>
+
+
+
+		<p:confirmDialog id="confirmDialog"
+			message="Tem certeza que deseja deletar?"
+			header="Iniciando exclusão do colaborador" severity="alert"
+			widgetVar="confirmation">
+
+
+			<h:panelGrid id="display" columns="2" cellpadding="4"
+				style="margin:0 auto;">
+
+
+
+
+				<p:commandButton id="confirm" value="Sim"
+					oncomplete="confirmation.hide()"
+					actionListener="#{funcionario.deletarFuncionario()}"
+					update="datatableFunc">
+				</p:commandButton>
+
+				<p:commandButton id="decline" value="Não"
+					onclick="confirmation.hide()" type="button" />
+
+			</h:panelGrid>
+
+
+		</p:confirmDialog>
+
+	</h:form>
+
+	<!-- Form utilizado para inserir um novo funcionario -->
+
+	<h:form id="formInserir" prependId="false">
+
+		<p:dialog id="modalDialog" header="Novo Funcionário"
+			widgetVar="inserirDialog" modal="true">
+
+
+
+			<h:panelGrid id="panel" columns="4" cellspacing="5">
+				<h:outputLabel value="Matrícula: *" for="matricula"></h:outputLabel>
+				<p:inputText id="matricula"
+					value="#{funcionario.funcionarioPOJO.matricula}" required="true"
+					label="Matrícula">
+					<f:validateLength minimum="8" maximum="8" />
+				</p:inputText>
+
+
+
+
+				<h:outputLabel value="Equipe *" for="equipe"></h:outputLabel>
+				<p:selectOneMenu id="equipe"
+					value="#{funcionario.funcionarioPOJO.equipe}">
+					<f:selectItem itemLabel=" " itemValue=" " />
+					<f:selectItem itemLabel="PE - Automóvel" itemValue="PE Automóvel" />
+					<f:selectItem itemLabel="PE - Ramos Elementares"
+						itemValue="PE - Ramos Elementares" />
+					<f:selectItem itemLabel="PE - Vida e Previdência"
+						itemValue="PE - Vida e Previdência" />
+					<f:selectItem itemLabel="Informática" itemValue="Informática" />
+
+					<f:validateLength minimum="4">
+					</f:validateLength>
+				</p:selectOneMenu>
+
+
+			</h:panelGrid>
+
+			<h:panelGrid id="panelDois" columns="2" cellspacing="5"
+				cellpadding="6">
+
+				<h:outputLabel value="Nome: *" for="nome"></h:outputLabel>
+				<p:inputText id="nome" value="#{funcionario.funcionarioPOJO.nome}"
+					size="60" required="true" label="Nome">
+					<f:validateLength minimum="4" maximum="45" />
+				</p:inputText>
+
+
+
+
+
+				<h:outputLabel value="Senha: *" for="senha"></h:outputLabel>
+				<p:password id="senha" value="#{funcionario.funcionarioPOJO.senha}"
+					required="true" label="senha">
+					<f:validateLength minimum="8" maximum="8" />
+				</p:password>
+
+
+
+				<h:outputLabel value="Celular: *" for="celular"></h:outputLabel>
+				<p:inputMask id="celular" mask="(99) 99999-9999"
+					value="#{funcionario.funcionarioPOJO.celular}" required="true"
+					label="Celular">
+					<f:validateLength minimum="9" />
+				</p:inputMask>
+
+
+			</h:panelGrid>
+
+
+
+			<div align="center">
+				<h:panelGrid id="panelTres" columns="2" cellspacing="5">
+
+
+					<p:commandButton action="#{funcionario.inserirFuncionario}"
+						value="Inserir"
+						update=":formTabelaFunc:datatableFunc,:formInserir:modalDialog"
+						oncomplete="inserirDialog.hide()">
+
+					</p:commandButton>
+
+					<p:commandButton value="Limpar"
+						action="#{funcionario.limparTudo()}"
+						update=":formInserir:panel,:formInserir:panelDois,:formInserir:panelTres">
+
+					</p:commandButton>
+
+
+
+				</h:panelGrid>
+			</div>
+
+
+
+
+
+		</p:dialog>
+
+
+	</h:form>
+
+
+
+
+
+
+	<!-- Form Utilizado para alterar dados do funcionário -->
+
+
+	<h:form id="formAlterar">
+
+
+		<p:dialog id="modalDialogAlterar" header="Alterar Funcionário"
+			widgetVar="alterarDialog" modal="true">
+
+
+
+
+
+			<h:panelGrid id="panelAlterar" columns="4" cellspacing="5">
+				<h:outputLabel value="Matrícula: *" for="matriculaAlterar"></h:outputLabel>
+				<p:inputText id="matriculaAlterar"
+					value="#{funcionario.funcionarioPOJO.matricula}" required="true"
+					label="Matrícula">
+					<f:validateLength minimum="8" maximum="8" />
+				</p:inputText>
+
+
+
+				<h:outputText value="Equipe *" for="equipeAlterar"></h:outputText>
+				<p:selectOneMenu id="equipeAlterar"
+					value="#{funcionario.funcionarioPOJO.equipe}">
+					<f:selectItem itemLabel=" " itemValue=" " />
+					<f:selectItem itemLabel="PE - Automóvel" itemValue="PE Automóvel" />
+					<f:selectItem itemLabel="PE - Ramos Elementares"
+						itemValue="PE - Ramos Elementares" />
+					<f:selectItem itemLabel="PE - Vida e Previdência"
+						itemValue="PE - Vida e Previdência" />
+					<f:selectItem itemLabel="Informática" itemValue="Informática" />
+
+					<f:validateLength minimum="4">
+					</f:validateLength>
+				</p:selectOneMenu>
+
+
+
+			</h:panelGrid>
+
+			<h:panelGrid id="panelDoisAlterar" columns="2" cellspacing="5"
+				cellpadding="6">
+
+
+				<h:outputLabel value="Nome: *" for="nomeAlterar"></h:outputLabel>
+				<p:inputText id="nomeAlterar"
+					value="#{funcionario.funcionarioPOJO.nome}" size="60"
+					required="true" label="Nome">
+					<f:validateLength minimum="4" maximum="45" />
+				</p:inputText>
+
+				<h:outputLabel value="Senha: *" for="senhaAlterar"></h:outputLabel>
+
+				<!-- 					<p:password id="senha" value="#{funcionario.funcionarioPOJO.senha}" -->
+				<!-- 						required="true" label="senha" > -->
+				<!-- 						<f:validateLength minimum="8" maximum="8" /> -->
+				<!-- 					</p:password> -->
+
+
+
+				<h:outputLabel value="Celular: *" for="celularAlterar"></h:outputLabel>
+				<p:inputMask id="celularAlterar" mask="(99) 99999-9999"
+					value="#{funcionario.funcionarioPOJO.celular}" required="true"
+					label="Celular">
+					<f:validateLength minimum="9" />
+				</p:inputMask>
+
+
+			</h:panelGrid>
+
+			<div align="center" id="alterar">
+
+				<h:panelGrid id="panelTresAlterar" columns="2" cellspacing="5">
+
+
+
+					<p:commandButton action="#{funcionario.alterarFuncionario}"
+						value="Alterar" oncomplete="alterarDialog.hide()"
+						update=":formTabelaFunc:datatableFunc">
+
+
+					</p:commandButton>
+
+					<p:commandButton value="Limpar" action="#{funcionario.limpar()}"
+						update=":formAlterar:panelAlterar,:formAlterar:panelDoisAlterar,:formAlterar:panelTresAlterar">
+
+					</p:commandButton>
+
+
+
+				</h:panelGrid>
+			</div>
+
+		</p:dialog>
+
+
+	</h:form>
+
+
+
+</h:body>
+
+</html>
