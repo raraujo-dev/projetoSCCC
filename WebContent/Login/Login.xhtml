@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+<h:head>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
+
+
+	<title>Login</title>
+</h:head>
+
+<h:body style="background-color:#B0E0E6;">
+
+	<p:growl id="aviso" />
+
+
+	<h:form id="formLogin">
+
+		<p:messages id="messages" autoUpdate="true" closable="true" />
+
+
+		<p:panel style="margin-bottom:10px;" header="Tarefas">
+			<h:panelGrid columns="2">
+
+
+				<h:outputLabel value="Matrícula: *" for="matricula"></h:outputLabel>
+				<p:inputText id="matricula" value="#{login.funcionario.matricula}"
+					required="true" label="Matrícula" maxlength="8">
+
+					<f:validateLength minimum="8" maximum="8" />
+				</p:inputText>
+
+
+				<h:outputLabel value="Senha: *" for="senha"></h:outputLabel>
+				<p:password id="senha" value="#{login.funcionario.senha}"
+					required="true" label="senha">
+					<f:validateLength minimum="8" maximum="8" />
+				</p:password>
+
+			</h:panelGrid>
+
+
+
+		</p:panel>
+		<p:commandButton value="Login" action="#{login.validarLogin()}"></p:commandButton>
+
+	</h:form>
+
+
+</h:body>
+</html>
